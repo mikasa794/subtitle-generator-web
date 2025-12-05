@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "subtitle-generator",
+  "routes": [
+    { "src": "/", "dest": "subtitle-generator/index.html" },
+    { "src": "/(.*)", "dest": "subtitle-generator/$1" }
+  ]
+}
