@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
         const command = `node "${scriptPath}" "${safeCourseTitle}" "${safeLessonTitle}"`;
 
-        return new Promise((resolve) => {
+        return new Promise<NextResponse>((resolve) => {
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`[API] Summary generation script error: ${stderr}`);

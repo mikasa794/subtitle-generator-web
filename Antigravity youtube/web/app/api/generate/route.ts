@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         // If it times out, we might need to spawn without waiting.
         const command = `python "${scriptPath}" "${topic}"`;
 
-        return new Promise((resolve) => {
+        return new Promise<NextResponse>((resolve) => {
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`[API] Error: ${error.message}`);

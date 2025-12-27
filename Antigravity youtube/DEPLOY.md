@@ -5,11 +5,12 @@ The project is located in a subdirectory `Antigravity youtube/web` within the re
 
 ### **CRITICAL STEP**: Set Root Directory
 1. Go to your Vercel Project Dashboard.
-2. Click on **Settings** -> **General**.
-3. Find the **"Root Directory"** section.
-4. Click **Edit**.
-5. Enter: `Antigravity youtube/web`
-6. Click **Save**.
+2. Click on **Settings**.
+3. On the left sidebar, click **Build and Deployment**.
+4. Find the **"Root Directory"** section.
+5. Click **Edit**.
+6. Enter: `Antigravity youtube/web`
+7. Click **Save**.
 
 ## 2. Environment Variables
 Ensure the following variables are set in Vercel (**Settings** -> **Environment Variables**):

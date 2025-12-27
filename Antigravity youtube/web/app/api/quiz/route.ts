@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
         console.log(`[API] Generating Quiz for: ${safeLesson}...`);
 
-        return new Promise((resolve) => {
+        return new Promise<NextResponse>((resolve) => {
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`[API] Quiz Error: ${stderr}`);
