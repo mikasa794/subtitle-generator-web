@@ -1,0 +1,119 @@
+================================================== 
+[2025/12/26 周五 20:04:22.10] Starting Daily Update Task... 
+usage: orchestrator.py [-h] [--url URL] [--batch] [--force] [--auto-approve]
+
+Daily Content Curation Workflow
+
+options:
+  -h, --help      show this help message and exit
+  --url URL       Process a single URL
+  --batch         Scan subscribed channels
+  --force         Process even if already done
+  --auto-approve  Automatically process all found videos without asking
+[2025/12/26 周五 20:04:23.07] Task Finished. 
+================================================== 
+================================================== 
+[2025/12/26 周五 20:06:05.24] Starting Daily Update Task... 
+INFO:__main__:Starting Batch Mode...
+INFO:__main__:Scanning channel: MIT RAISE...
+INFO:__main__:Scanning channel: Anthropic...
+INFO:__main__:Scanning channel: Peter Yang...
+INFO:__main__:Scanning channel: Lenny's Podcast...
+INFO:__main__:Scanning channel: TED...
+INFO:__main__:Scanning channel: South Park Commons...
+INFO:__main__:Scanning channel: Sequoia Capital...
+INFO:__main__:Scanning channel: Ryan Peterman...
+INFO:__main__:Scanning channel: No Priors...
+INFO:__main__:Scanning channel: GV (Google Ventures)...
+INFO:__main__:Automatically processing all 2 new videos...
+INFO:__main__:Processing URL: https://www.youtube.com/watch?v=_W2Q993vFMk
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+WARNING: [youtube] _W2Q993vFMk: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: [youtube] _W2Q993vFMk: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: ffmpeg not found. The downloaded format may not be the best available. Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies
+INFO:__main__:Fetching transcript...
+ERROR:fetcher:Error fetching transcript for _W2Q993vFMk: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=_W2Q993vFMk! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!
+ERROR:__main__:No transcript found.
+INFO:__main__:Processing URL: https://www.youtube.com/watch?v=rBJnWMD0Pho
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+WARNING: [youtube] rBJnWMD0Pho: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: [youtube] rBJnWMD0Pho: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: ffmpeg not found. The downloaded format may not be the best available. Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies
+INFO:__main__:Fetching transcript...
+ERROR:fetcher:Error fetching transcript for rBJnWMD0Pho: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=rBJnWMD0Pho! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!
+ERROR:__main__:No transcript found.
+
+Found new videos:
+[0] Anna Lucia Peluso, "Multicultural Education with AI: 'A World at the Table'" (https://www.youtube.com/watch?v=_W2Q993vFMk)
+[1] Let Claude handle work in your browser (https://www.youtube.com/watch?v=rBJnWMD0Pho)
+[2025/12/26 周五 20:06:18.01] Task Finished. 
+================================================== 
+================================================== 
+[2025/12/27 周六  8:00:02.92] Starting Daily Update Task... 
+INFO:__main__:Starting Batch Mode...
+INFO:__main__:Scanning channel: MIT RAISE...
+INFO:__main__:Scanning channel: Anthropic...
+INFO:__main__:Scanning channel: Peter Yang...
+INFO:__main__:Scanning channel: Lenny's Podcast...
+INFO:__main__:Scanning channel: TED...
+INFO:__main__:Scanning channel: South Park Commons...
+INFO:__main__:Scanning channel: Sequoia Capital...
+INFO:__main__:Scanning channel: Ryan Peterman...
+INFO:__main__:Scanning channel: No Priors...
+INFO:__main__:Scanning channel: GV (Google Ventures)...
+INFO:__main__:Automatically processing all 3 new videos...
+INFO:__main__:Processing URL: https://www.youtube.com/watch?v=_W2Q993vFMk
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+WARNING: [youtube] _W2Q993vFMk: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: [youtube] _W2Q993vFMk: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: ffmpeg not found. The downloaded format may not be the best available. Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies
+INFO:__main__:Fetching transcript...
+ERROR:fetcher:Error fetching transcript for _W2Q993vFMk: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=_W2Q993vFMk! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!
+ERROR:__main__:No transcript found.
+INFO:__main__:Processing URL: https://www.youtube.com/watch?v=rBJnWMD0Pho
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+WARNING: [youtube] rBJnWMD0Pho: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: [youtube] rBJnWMD0Pho: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: ffmpeg not found. The downloaded format may not be the best available. Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies
+INFO:__main__:Fetching transcript...
+ERROR:fetcher:Error fetching transcript for rBJnWMD0Pho: 
+Could not retrieve a transcript for the video https://www.youtube.com/watch?v=rBJnWMD0Pho! This is most likely caused by:
+
+Subtitles are disabled for this video
+
+If you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!
+ERROR:__main__:No transcript found.
+INFO:__main__:Processing URL: https://www.youtube.com/watch?v=ZkXrTHpnQrQ
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+WARNING: [youtube] ZkXrTHpnQrQ: Some web_safari client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: [youtube] ZkXrTHpnQrQ: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+WARNING: ffmpeg not found. The downloaded format may not be the best available. Installing ffmpeg is strongly recommended: https://github.com/yt-dlp/yt-dlp#dependencies
+INFO:__main__:Fetching transcript...
+INFO:__main__:Calling AI Rewriter (Node.js)...
+INFO:__main__:Archiving content...
+INFO:__main__:Saved to C:\Users\mikas\OneDrive\Antigravity youtube\archives\20251226 - Why Are People Starting to Sound Like ChatGPT  Adam Aleksic  TED
+INFO:__main__:Syncing to Feishu...
+INFO:__main__:Feishu Sync Success
+INFO:__main__:Done.
+
+Found new videos:
+[0] Anna Lucia Peluso, "Multicultural Education with AI: 'A World at the Table'" (https://www.youtube.com/watch?v=_W2Q993vFMk)
+[1] Let Claude handle work in your browser (https://www.youtube.com/watch?v=rBJnWMD0Pho)
+[2] Why Are People Starting to Sound Like ChatGPT? | Adam Aleksic | TED (https://www.youtube.com/watch?v=ZkXrTHpnQrQ)
+[2025/12/27 周六  8:01:07.54] Task Finished. 
+================================================== 
