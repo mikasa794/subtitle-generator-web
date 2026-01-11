@@ -134,7 +134,10 @@ def process_url(url, manager, fetcher, archiver, feishu, force=False):
     record = {
         "Title": parsed_data.get('Title') or info['title'],
         "URL": {"text": url, "link": url},
-        "Date": (lambda d: int(datetime.strptime(d, '%Y-%m-%d').timestamp() * 1000) if d and re.match(r'\d{4}-\d{2}-\d{2}', d) else (int(datetime.strptime(str(info['upload_date']), '%Y%m%d').timestamp() * 1000) if info.get('upload_date') else 0))(parsed_data.get('Date')),
+        # Prioritize YouTube Metadata Date (YYYYMMDD) > AI Date > Fallback
+        "Date": (lambda: int(datetime.strptime(info['upload_date'], '%Y%m%d').timestamp() * 1000) if info.get('upload_date') else (
+            int(datetime.strptime(parsed_data.get('Date'), '%Y-%m-%d').timestamp() * 1000) if parsed_data.get('Date') and re.match(r'\d{4}-\d{2}-\d{2}', parsed_data.get('Date')) else 0
+        ))(),
         "Author": parsed_data.get('Author') or info.get('channel', ''),
         "Tags": parsed_data.get('Tags', []), 
         "Golden Quote": parsed_data.get('Golden Quote', ''),
@@ -170,6 +173,7 @@ def main():
     parser.add_argument('--batch', action='store_true', help="Scan subscribed channels")
     parser.add_argument('--force', action='store_true', help="Process even if already done")
     parser.add_argument('--auto-approve', action='store_true', help="Automatically process all found videos without asking")
+    parser.add_argument('--daemon', action='store_true', help="Run in background mode (checks every 4 hours)")
     args = parser.parse_args()
 
     manager = SourceManager(
@@ -180,39 +184,56 @@ def main():
     archiver = ContentArchiver(ARCHIVE_DIR)
     feishu = FeishuSync(manager.get_api_keys())
 
-    if args.url:
+    if args.daemon:
+        import time
+        logger.info("🕵️‍♂️ DETECTIVE MODE ENABLED: Watching for new content every 4 hours...")
+        while True:
+            try:
+                logger.info("\n⏰ Wake up! Checking for updates...")
+                run_batch(manager, fetcher, archiver, feishu, force=args.force)
+                logger.info("💤 Nothing new / Done. Sleeping for 4 hours.")
+                time.sleep(4 * 3600) 
+            except KeyboardInterrupt:
+                logger.info("Stopping Daemon.")
+                break
+            except Exception as e:
+                logger.error(f"Daemon crashed: {e}. Retrying in 1 hour.")
+                time.sleep(3600)
+
+    elif args.url:
         process_url(args.url, manager, fetcher, archiver, feishu, args.force)
     elif args.batch:
-        logger.info("Starting Batch Mode...")
-        channels = manager.get_channels()
-        candidates = []
-        
-        # 1. Scan Channels
-        for ch in channels:
-            logger.info(f"Scanning channel: {ch['name']}...")
-            videos = fetcher.get_channel_latest_videos(ch['url'], limit=3) # Limit to recent 3
-            for v in videos:
-                if not manager.is_processed(v['id']):
-                    candidates.append(v)
-        
-        if not candidates:
-            logger.info("No new videos found.")
-            return
-
-        # 2. Auto-Process All (No Interaction)
-        print("\nFound new videos:")
-        for idx, v in enumerate(candidates):
-            print(f"[{idx}] {v.get('title')} ({v.get('url')})")
-        
-        logger.info(f"Automatically processing all {len(candidates)} new videos...")
-        to_process = candidates
-
-        # 3. Process Selected
-        for v in to_process:
-            process_url(v['url'], manager, fetcher, archiver, feishu, force=args.force)
-
+        run_batch(manager, fetcher, archiver, feishu, force=args.force)
     else:
         parser.print_help()
+
+def run_batch(manager, fetcher, archiver, feishu, force=False):
+    logger.info("Starting Batch Scan...")
+    channels = manager.get_channels()
+    candidates = []
+    
+    # 1. Scan Channels
+    for ch in channels:
+        logger.info(f"Scanning channel: {ch['name']}...")
+        videos = fetcher.get_channel_latest_videos(ch['url'], limit=5) 
+        for v in videos:
+            if not manager.is_processed(v['id']):
+                candidates.append(v)
+    
+    if not candidates:
+        logger.info("No new videos found.")
+        return
+
+    # 2. Auto-Process All
+    print(f"\nFound {len(candidates)} new videos:")
+    for idx, v in enumerate(candidates):
+        print(f"[{idx}] {v.get('title')} ({v.get('url')})")
+    
+    logger.info(f"Automatically processing...")
+    
+    # 3. Process
+    for v in candidates:
+        process_url(v['url'], manager, fetcher, archiver, feishu, force=force)
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,39 @@ class YouTubeFetcher:
             'force_generic_extractor': False,
         }
 
+    def get_playlist_info(self, url):
+        try:
+            with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                
+                # Check if it's a playlist
+                if info.get('_type') == 'playlist' or 'entries' in info:
+                    logger.info(f"Found Playlist: {info.get('title')}")
+                    videos = []
+                    for entry in info.get('entries', []):
+                        if entry: # entry might be None if deleted
+                            videos.append({
+                                'title': entry.get('title'),
+                                'id': entry.get('id'),
+                                'url': entry.get('url') or f"https://www.youtube.com/watch?v={entry.get('id')}",
+                                'duration': entry.get('duration')
+                            })
+                    return {
+                        'type': 'playlist',
+                        'title': info.get('title'),
+                        'id': info.get('id'),
+                        'videos': videos
+                    }
+                else:
+                    # Single video
+                    return {
+                        'type': 'video', 
+                        'video': self.get_video_info(url) # Reuse logic, but careful about recursion if get_video_info calls this? No.
+                    }
+        except Exception as e:
+            logger.error(f"Error fetching playlist for {url}: {e}")
+            return None
+
     def get_video_info(self, url):
         try:
             with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:

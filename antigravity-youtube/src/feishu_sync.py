@@ -91,5 +91,32 @@ class FeishuSync:
                 logger.error(f"Feishu Sync Error: {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Failed to sync to Bitable: {e}")
             return False
+
+    def upload_file(self, file_path, parent_type="bitable_file"):
+        if not os.path.exists(file_path):
+            return None
+        
+        token = self.get_tenant_access_token()
+        if not token: return None
+
+        url = "https://open.feishu.cn/open-apis/drive/v1/medias/upload_all"
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        try:
+            with open(file_path, 'rb') as f:
+                size = os.path.getsize(file_path)
+                data = {
+                    'parent_type': parent_type,
+                    'parent_node': self.app_token,
+                    'size': size,
+                    'file_name': os.path.basename(file_path)
+                }
+                files = {'file': (os.path.basename(file_path), f)}
+                
+                response = requests.post(url, headers=headers, data=data, files=files)
+                response.raise_for_status()
+                return response.json().get('data', {}).get('file_token')
+        except Exception as e:
+            logger.error(f"Failed to upload file: {e}")
+            return None

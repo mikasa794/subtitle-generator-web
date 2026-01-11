@@ -1,0 +1,135 @@
+import os
+import requests
+import sys
+import json
+from source_manager import SourceManager
+from feishu_sync import FeishuSync
+
+# Config
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_DIR = os.path.join(BASE_DIR, 'config')
+
+# Force UTF-8 for Windows Console
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
+def main():
+    print("✨ Seeding LingoTube V7 (Precision Sync +16.5s)...")
+    manager = SourceManager(
+        os.path.join(CONFIG_DIR, 'sources.yaml'),
+        os.path.join(CONFIG_DIR, 'state.yaml')
+    )
+    keys = manager.get_api_keys()
+    
+    feishu = FeishuSync(keys)
+    tenant_token = feishu.get_tenant_access_token()
+    app_token = keys.get('bitable_app_token')
+    lingo_table_id = keys.get('lingo_table_id')
+
+    if not app_token or not lingo_table_id:
+        print("Error: Config missing app_token or lingo_table_id")
+        return
+
+    # Video: Friends - Joey's Bad Birthday Gift (221F55VPp2M)
+    video_url = "https://www.youtube.com/watch?v=221F55VPp2M"
+    
+    # Corrected Timestamps (Shifted +16.5s based on user feedback 0:32 for Ladle)
+    # Original: 15-18 -> Target 31.5-34.5
+    
+    transcript_structure = [
+        {
+            "start": 31.5, "end": 35.0,
+            "text_source": "Joey: It's a ladle! You know, for scooping soup or punch.",
+            "text_target": "乔伊：这是个汤勺！你知道的，用来舀汤或者果汁潘趣酒。",
+            "context": {
+                "type": "dialogue",
+                "summary": "Joey 认真地解释这个礼物的实用性。",
+                "grammar": "'For scooping' - For + V-ing (动名词) 表示物品的功能或用途。",
+                "vocab": [
+                    {
+                        "word": "Ladle",
+                        "ipa": "/ˈleɪ.dəl/",
+                        "pos": "n. (名词)",
+                        "meaning": "长柄大汤勺",
+                        "definition_en": "A large long-handled spoon with a cup-shaped bowl, used for serving soup, stew, or punch.",
+                        "synonyms": ["Spoon", "Dipper"],
+                        "common_phrases": ["Soup ladle (汤勺)", "Ladle out (舀出)"],
+                        "highlight": True
+                    },
+                    {
+                        "word": "Scoop",
+                        "ipa": "/skuːp/",
+                        "pos": "v. (动词)",
+                        "meaning": "舀取；挖出",
+                        "definition_en": "To pick up or move something with a scoop or a spoon.",
+                        "synonyms": ["Dig", "Shovel"],
+                        "common_phrases": ["Scoop up (抱起/铲起)", "The inside scoop (内幕消息)"],
+                        "highlight": False
+                    }
+                ]
+            }
+        },
+        {
+            "start": 39.5, "end": 45.0,
+            "text_source": "Joey: I figured you invite people over a lot, you serve soup, you need a ladle.",
+            "text_target": "乔伊：我寻思你经常请人来做客，你会招待汤，所以你需要个汤勺。",
+            "context": {
+                "type": "dialogue",
+                "summary": "Joey 展示了他单纯直线的逻辑思维。",
+                "vocab": [
+                    {
+                        "word": "Figure",
+                        "ipa": "/ˈfɪɡ.jər/",
+                        "pos": "v. (动词)",
+                        "meaning": "认为；推测 (口)",
+                        "definition_en": "To expect, believe, or think that something will happen.",
+                        "synonyms": ["Think", "Reckon", "Assume"],
+                        "common_phrases": ["Go figure (你瞧瞧/真怪了)", "Figure out (弄明白)"],
+                        "highlight": True
+                    },
+                     {
+                        "word": "Invite over",
+                        "ipa": "/ɪnˈvaɪt ˈəʊ.vər/",
+                        "pos": "phrasal verb (短语动词)",
+                        "meaning": "邀请(某人)来家里",
+                        "definition_en": "To ask someone to come to your home.",
+                        "synonyms": ["Have over", "Ask round"],
+                        "common_phrases": [],
+                        "highlight": False
+                    }
+                ],
+                "cultural_note": "送礼文化：在西方，送这种纯实用性的厨房用具给年轻异性朋友（尤其是生日）通常被认为是'直男'行为 (clueless guy move)，显得不够用心或浪漫。"
+            }
+        }
+    ]
+    
+    transcript_json_str = json.dumps(transcript_structure, ensure_ascii=False, indent=2)
+    
+    record = {
+        "Title": "Friends: The Ladle Incident (V7 Perfect Sync)",
+        "Series": "Friends",
+        "Target Language": "English",
+        "Video URL": {"text": "Watch", "link": video_url},
+        "Transcript": transcript_json_str,
+        "Difficulty": "Intermediate",
+        "Status": "Done",
+        "AI Notes": "V7 Demo: Manual Sync Calibration + Sync Controls."
+    }
+
+    headers = {"Authorization": f"Bearer {tenant_token}", "Content-Type": "application/json"}
+    res = requests.post(
+        f"https://open.feishu.cn/open-apis/bitable/v1/apps/{app_token}/tables/{lingo_table_id}/records", 
+        headers=headers, 
+        json={"fields": record}
+    )
+    
+    if res.status_code == 200:
+        print("✅ V7 Precision Sync Demo Seeded!")
+    else:
+        print(f"❌ V7 Seed failed: {res.text}")
+
+if __name__ == "__main__":
+    main()

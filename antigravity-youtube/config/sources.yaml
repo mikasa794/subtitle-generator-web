@@ -1,43 +1,46 @@
 api_keys:
-  openai: sk-acb88ccf47874b75abfce5631ddff720
-  openai_base_url: https://api.deepseek.com
-  google_api_key: ''
-  gemini: YOUR_GEMINI_API_KEY
-  feishu_app_id: cli_a9c6a1bb56f89cd4
-  feishu_app_secret: Ox6v51RIbon1bbxaHmvUGhqRNnW3CiUs
-  feishu_user_access_token: YOUR_USER_ACCESS_TOKEN
   bitable_app_token: FCnWb734NawZW6spPVvcMjtonjf
   bitable_table_id: tblZh4KDjOUZnpod
   courses_table_id: tbleFDCQBG74x5sp
+  feishu_app_id: cli_a9c6a1bb56f89cd4
+  feishu_app_secret: Ox6v51RIbon1bbxaHmvUGhqRNnW3CiUs
+  feishu_user_access_token: YOUR_USER_ACCESS_TOKEN
+  gemini: YOUR_GEMINI_API_KEY
+  google_api_key: ''
+  groq_api_key: ""
   lessons_table_id: tbl04aHyg3FzM5sQ
+  lingo_table_id: tblTEYjEp8ZtDwZZ
+  openai: sk-acb88ccf47874b75abfce5631ddff720
+  openai_base_url: https://api.deepseek.com
+  vocab_table_id: tblx7DodiHH6jkVR
 channels:
-  - name: "MIT RAISE"
-    url: "https://www.youtube.com/channel/UCwUwpH-kS_lPJmP9Y1U75Ig"
-    enable: true
-  - name: "Anthropic"
-    url: "https://www.youtube.com/channel/UCrDwWp7EBBv4NwvScIpBDOA"
-    enable: true
-  - name: "Peter Yang"
-    url: "https://www.youtube.com/channel/UCnpBg7yqNauHtlNSpOl5-cg"
-    enable: true
-  - name: "Lenny's Podcast"
-    url: "https://www.youtube.com/channel/UC6t1O76G0jYXOAoYCm153dA"
-    enable: true
-  - name: "TED"
-    url: "https://www.youtube.com/channel/UCAuUUnT6oDeKwE6v1NGQxug"
-    enable: true
-  - name: "South Park Commons"
-    url: "https://www.youtube.com/channel/UCMR-rPSUI34DRQXUkvFuIUQ"
-    enable: true
-  - name: "Sequoia Capital"
-    url: "https://www.youtube.com/channel/UCWrF0oN6unbXrWsTN7RctTw"
-    enable: true
-  - name: "Ryan Peterman"
-    url: "https://www.youtube.com/channel/UCzB7YGrrxDC_POenf86H3_Q"
-    enable: true
-  - name: "No Priors"
-    url: "https://www.youtube.com/channel/UCSI7h9hydQ40K5MJHnCrQvw"
-    enable: true
-  - name: "GV (Google Ventures)"
-    url: "https://www.youtube.com/channel/UC51bU7uJjsdcIEUzY1HHZsA"
-    enable: true
+- enable: true
+  name: MIT RAISE
+  url: https://www.youtube.com/channel/UCwUwpH-kS_lPJmP9Y1U75Ig
+- enable: true
+  name: Anthropic
+  url: https://www.youtube.com/channel/UCrDwWp7EBBv4NwvScIpBDOA
+- enable: true
+  name: Peter Yang
+  url: https://www.youtube.com/channel/UCnpBg7yqNauHtlNSpOl5-cg
+- enable: true
+  name: Lenny's Podcast
+  url: https://www.youtube.com/channel/UC6t1O76G0jYXOAoYCm153dA
+- enable: true
+  name: TED
+  url: https://www.youtube.com/channel/UCAuUUnT6oDeKwE6v1NGQxug
+- enable: true
+  name: South Park Commons
+  url: https://www.youtube.com/channel/UCMR-rPSUI34DRQXUkvFuIUQ
+- enable: true
+  name: Sequoia Capital
+  url: https://www.youtube.com/channel/UCWrF0oN6unbXrWsTN7RctTw
+- enable: true
+  name: Ryan Peterman
+  url: https://www.youtube.com/channel/UCzB7YGrrxDC_POenf86H3_Q
+- enable: true
+  name: No Priors
+  url: https://www.youtube.com/channel/UCSI7h9hydQ40K5MJHnCrQvw
+- enable: true
+  name: GV (Google Ventures)
+  url: https://www.youtube.com/channel/UC51bU7uJjsdcIEUzY1HHZsA

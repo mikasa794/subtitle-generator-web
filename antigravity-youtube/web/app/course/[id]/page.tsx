@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import CourseQuiz from '@/components/CourseQuiz';
 import CourseNotes from '@/components/CourseNotes';
 import CourseSidebar from '@/components/CourseSidebar';
+import CoursePlayerClient from './CoursePlayerClient';
 
 export const revalidate = 0;
 
@@ -62,37 +63,16 @@ export default async function CoursePlayerPage(props: PageProps) {
             {/* Main Content */}
             <main className="flex-1 ml-80 pt-[48px] min-h-screen flex flex-col">
                 {activeLesson ? (
-                    <div className="flex-1 max-w-5xl mx-auto w-full p-8 lg:p-12">
-                        <div className="aspect-video bg-black rounded-[24px] overflow-hidden shadow-2xl mb-8 relative group">
-                            {activeLesson.videoUrl ? (
-                                <iframe
-                                    src={`https://www.youtube.com/embed/${getYouTubeId(activeLesson.videoUrl)}?autoplay=1&rel=0`}
-                                    className="w-full h-full"
-                                    title={activeLesson.title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                    Video URL missing
-                                </div>
-                            )}
-                        </div>
+                    <div className="flex-1 w-full max-w-[1600px] mx-auto p-4 lg:p-8">
 
-                        <div className="max-w-3xl">
-                            <div className="flex items-center gap-3 text-sm font-medium text-blue-600 mb-2">
-                                <span>{activeLesson.moduleTitle}</span>
-                            </div>
-                            <h2 className="text-3xl font-semibold text-[#1d1d1f] mb-4">
-                                {activeLesson.title}
-                            </h2>
-                            {/* Placeholder for future Lesson Notes / AI Summary */}
-                            <div className="prose prose-gray mb-8">
-                                <p className="text-[#86868b]">
-                                    Watch this lesson to master the concepts of {activeLesson.title}.
-                                </p>
-                            </div>
+                        <CoursePlayerClient
+                            title={activeLesson.title}
+                            videoUrl={activeLesson.videoUrl || ""}
+                            transcript={activeLesson.transcript || ""}
+                        />
 
+                        <div className="max-w-3xl mt-8">
+                            {/* Quiz & Notes remain below */}
                             <CourseQuiz
                                 courseTitle={course.title}
                                 lessonTitle={activeLesson.title}
@@ -110,7 +90,7 @@ export default async function CoursePlayerPage(props: PageProps) {
                         No lessons available for this course.
                     </div>
                 )}
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }

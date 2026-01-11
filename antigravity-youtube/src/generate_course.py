@@ -5,6 +5,8 @@ import subprocess
 import requests
 from source_manager import SourceManager
 from feishu_sync import FeishuSync
+from fetcher import YouTubeFetcher
+from services.whisper_service import WhisperService
 
 # Configuration
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,42 +44,23 @@ def generate_syllabus(topic):
         print(raw_json)
         raise
 
-def find_best_video(query):
-    print(f"🔍 Searching YouTube: '{query}'...")
-    cmd = [
-        "python", "-m", "yt_dlp",
-        f"ytsearch1:{query}",
-        "--print", "id",
-        "--print", "title",
-        "--print", "duration_string",
-        "--print", "thumbnail",
-        "--no-warnings"
-    ]
+def format_transcript(transcript_list):
+    """
+    Formats list of {'text', 'start', ...} into a readable string.
+    """
+    if not transcript_list:
+        return ""
     
-    
-    try:
-        # returns bytes
-        result = subprocess.run(cmd, capture_output=True) 
-        try:
-            output = result.stdout.decode('utf-8')
-        except UnicodeDecodeError:
-             # Fallback for Windows typically
-            output = result.stdout.decode('gbk', errors='ignore')
-
-        lines = output.strip().split('\n')
-        
-        if len(lines) >= 4:
-            return {
-                "id": lines[0],
-                "title": lines[1],
-                "duration": lines[2],
-                "thumbnail": lines[3],
-                "url": f"https://www.youtube.com/watch?v={lines[0]}"
-            }
-    except Exception as e:
-        print(f"Error searching video: {e}")
-        return None
-    return None
+    lines = []
+    for item in transcript_list:
+        t = item.get('text', '').strip()
+        if t:
+            # Optional: Add timestamps? [00:12] Text
+            # For comprehensive reading, simple text is better, but videos need ref.
+            # Let's add simple timestamps every ~30 seconds or so? 
+            # For MVP simplicity: just text.
+            lines.append(t)
+    return "\n".join(lines)
 
 def main():
     if len(sys.argv) < 2:
@@ -98,6 +81,15 @@ def main():
     keys = manager.get_api_keys()
     
     feishu = FeishuSync(keys)
+    fetcher = YouTubeFetcher() # Init fetcher (Still used for info)
+    
+    groq_key = keys.get('groq_api_key')
+    if not groq_key:
+        print("Error: Groq API Key missing.")
+        return
+        
+    whisper_service = WhisperService(groq_key)
+    
     courses_table_id = keys.get('courses_table_id')
     lessons_table_id = keys.get('lessons_table_id')
     
@@ -120,14 +112,6 @@ def main():
             "Status": "Generating"
         }
         
-        # Sync Course
-        # Note: feishu_sync.sync_to_bitable returns True/False. 
-        # But we need the Record ID to link lessons?
-        # Feishu's create_record API returns the record_id. 
-        # Our current FeishuSync.sync_to_bitable logic ONLY returns True/False.
-        # We need to modifying FeishuSync OR just call API here directly for the Course to get its ID.
-        # Let's call API directly here for precision since we need the ID.
-        
         token = feishu.get_tenant_access_token()
         app_token = keys.get('bitable_app_token')
         
@@ -149,22 +133,61 @@ def main():
         for i, mod in enumerate(modules):
             print(f"\nProcessing Module {i+1}: {mod['title']}")
             
-            video_info = find_best_video(mod['search_query'])
+            # Use fetcher to search (via yt-dlp wrapped logic or just call directly)
+            # fetcher currently doesn't expose 'search' directly, it has get_video_info(url)
+            # We still need find_best_video logic. Let's reimplement it using subprocess for search
+            # because yt-dlp search is efficient.
             
-            if video_info:
-                # Capture first available thumbnail for course cover
-                if not first_thumbnail and video_info.get('thumbnail'):
-                    first_thumbnail = video_info['thumbnail']
+            search_query = mod['search_query']
+            print(f"   Searching: {search_query}...")
+            
+            # Simple yt-dlp search
+            try:
+                # ytsearch1 prints id
+                cmd = ["python", "-m", "yt_dlp", f"ytsearch1:{search_query}", "--print", "id", "--no-warnings"]
+                s_res = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
+                video_id = s_res.stdout.strip()
+            except Exception as e:
+                print(f"   Search error: {e}")
+                video_id = None
+
+            if video_id:
+                video_url = f"https://www.youtube.com/watch?v={video_id}"
+                
+                # Get Info & Transcript
+                # We use fetcher.get_video_info to get clean details (title, duration, thumbnail)
+                # And get_transcript for text
+                
+                info = fetcher.get_video_info(video_url)
+                if not info:
+                     # Fallback if fetcher fails?
+                     print("   Failed to get video details.")
+                     continue
+
+                if not first_thumbnail and info.get('thumbnail'):
+                    first_thumbnail = info['thumbnail']
+
+                # Use Whisper Service for Transcript
+                print("   Transcribing with Whisper AI (Standard Pipeline)...")
+                try:
+                     audio_path = whisper_service.download_audio(video_url)
+                     if audio_path:
+                         transcript_json = whisper_service.transcribe(audio_path)
+                         transcript_text = whisper_service.format_transcript_simple(transcript_json)
+                     else:
+                         transcript_text = "(Audio Download Failed)"
+                except Exception as e:
+                     print(f"   Whisper Pipeline failed. Falling back to simple text. Error: {e}")
+                     transcript_text = "(Transcript Unavailable - Error)"
 
                 lesson_record = {
-                    "Title": mod['title'],
+                    "Title": mod['title'], 
                     "Module Title": mod['title'],
-                    "Video URL": {"text": "Watch on YouTube", "link": video_info['url']},
-                    "Duration": video_info['duration'],
-                    "Course ID": [course_record_id]
+                    "Video URL": {"text": "Watch on YouTube", "link": video_url},
+                    "Duration": str(info.get('duration')),
+                    "Course ID": course_record_id, # FIX: Send as String, not List ['id']
+                    "Transcript": transcript_text
                 }
-                
-                lesson_record["Course ID"] = course_record_id 
                 
                 # Sync Lesson
                 res_l = requests.post(
@@ -185,8 +208,8 @@ def main():
         print("\nUpdating Course Status...")
         update_fields = {"Status": "Done"}
         if first_thumbnail:
-            # We use a text field 'Cover Image URL' to avoid complex attachment upload flows
             update_fields["Cover Image URL"] = first_thumbnail
+            # Try upload as attachment too if needed? No, URL field is simpler for now.
             
         requests.put(
             f"https://open.feishu.cn/open-apis/bitable/v1/apps/{app_token}/tables/{courses_table_id}/records/{course_record_id}",

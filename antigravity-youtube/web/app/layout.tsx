@@ -39,11 +39,25 @@ export default function RootLayout({
               <span className="font-semibold text-[13px] tracking-wide text-[#1d1d1f] group-hover:text-[#06c] transition-colors">NoiseReduction</span>
             </Link>
 
-            <div className="flex gap-8 text-[12px] font-medium text-[#1d1d1f]/80">
-              <Link href="/" className="hover:text-[#06c] transition-colors">Curated</Link>
-              <Link href="/courses" className="hover:text-[#06c] transition-colors text-purple-600 font-semibold">Courses 🆕</Link>
-              <Link href="/favorites" className="hover:text-[#06c] transition-colors">Favorites</Link>
+            {/* Navigation Links - Scrollable on Mobile */}
+            <div className="flex gap-6 lg:gap-8 text-[12px] font-medium text-[#1d1d1f]/80 overflow-x-auto whitespace-nowrap scrollbar-hide ml-4 lg:ml-0 pr-4 lg:pr-0 items-center h-full">
+              <Link href="/" className="hover:text-[#06c] transition-colors shrink-0">Curated</Link>
+              <Link href="/courses" className="hover:text-[#06c] transition-colors text-purple-600 font-semibold shrink-0">Courses 🆕</Link>
+              <Link href="/lingo" className="hover:text-[#06c] transition-colors text-orange-500 font-semibold shrink-0">Lingo 📺</Link>
+              <Link href="/friends" className="hover:text-[#06c] transition-colors text-[#7B538C] font-semibold shrink-0">Friends 🍕</Link>
+              <Link href="/favorites" className="hover:text-[#06c] transition-colors shrink-0">Favorites</Link>
             </div>
+
+            {/* Scrollbar Hide Style */}
+            <style jsx global>{`
+              .scrollbar-hide::-webkit-scrollbar {
+                  display: none;
+              }
+              .scrollbar-hide {
+                  -ms-overflow-style: none;
+                  scrollbar-width: none;
+              }
+            `}</style>
           </div>
         </div>
 
